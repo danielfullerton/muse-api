@@ -12,7 +12,7 @@ export class UserEntity implements IUser {
   @Column()
   lastName: string;
 
-  @Column({ nullable: true })
+  @Column({ default: false })
   premium: boolean;
 
   @Column({ nullable: true })
@@ -27,7 +27,7 @@ export class UserEntity implements IUser {
   @UpdateDateColumn()
   dateUpdated: Date;
 
-  constructor(email: string, firstName: string, lastName: string, premium: boolean, googleId: string, spotifyId: string) {
+  constructor (email: string, firstName: string, lastName: string, premium: boolean, googleId: string, spotifyId: string) {
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;

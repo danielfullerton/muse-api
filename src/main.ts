@@ -1,12 +1,13 @@
-require('dotenv').config({ path: `env/${process.env.NODE_ENV.toLowerCase()}.env`});
+require('dotenv').config({ path: `env/${process.env.NODE_ENV.toLowerCase()}.env` });
 
 import { ValidationPipe } from '@nestjs/common';
 import * as rateLimit from 'express-rate-limit';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as passport from 'passport';
+import cookieParser = require('cookie-parser');
 
-async function bootstrap() {
+async function bootstrap () {
   const app = await NestFactory.create(AppModule);
 
   app.use(rateLimit({
@@ -14,7 +15,10 @@ async function bootstrap() {
     max: 50
   }));
 
+  app.use(cookieParser(process.env.SECRET));
   app.use(passport.initialize());
+
+  app.enableCors();
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: true, forbidNonWhitelisted: true, whitelist: true }));
 

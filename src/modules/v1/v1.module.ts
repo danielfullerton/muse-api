@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
-import { UserEntity } from './auth/models/user.entity';
-import { SocketModule } from './socket/socket.module';
+import { UserEntity } from './user/models/user.entity';
 
 @Module({
   imports: [
@@ -21,8 +20,7 @@ import { SocketModule } from './socket/socket.module';
     PassportModule.register({
       session: false
     }),
-    AuthModule,
-    SocketModule
+    AuthModule
   ]
 })
 export class V1Module {}
