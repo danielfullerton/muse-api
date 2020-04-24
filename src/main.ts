@@ -1,3 +1,5 @@
+import { SetCookieInterceptor } from './modules/v1/auth/interceptors/set-cookie.interceptor';
+
 require('dotenv').config({ path: `env/${process.env.NODE_ENV.toLowerCase()}.env` });
 
 import { ValidationPipe } from '@nestjs/common';
@@ -20,6 +22,7 @@ async function bootstrap () {
 
   app.enableCors();
 
+  app.useGlobalInterceptors(new SetCookieInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: true, forbidNonWhitelisted: true, whitelist: true }));
 
   const port = process.env.PORT || 3000;

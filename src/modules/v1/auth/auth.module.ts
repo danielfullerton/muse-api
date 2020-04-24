@@ -29,32 +29,4 @@ import { sign } from 'jsonwebtoken';
   ],
   exports: [UserService]
 })
-export class AuthModule implements NestModule {
-  configure (consumer: MiddlewareConsumer): any {
-    consumer
-      .apply(authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'] }))
-      .forRoutes('/v1/auth/google/signIn', '/v1/auth/google/callback');
-
-    consumer
-      .apply(authenticate('jwt'))
-      .forRoutes('/v1/auth/user');
-
-    consumer
-      .apply((req, res, next) => {
-        if (req.user) {
-          const token = sign({ ...req.user }, process.env.SECRET, {
-            issuer: process.env.HOST,
-            subject: req.user.email,
-            expiresIn: process.env.EXPIRY_TIME,
-            audience: process.env.CLIENT_HOST
-          });
-          res.cookie('x-muse-token', token, {});
-          next();
-        }
-      })
-      .forRoutes({
-        path: '*',
-        method: RequestMethod.ALL
-      });
-  }
-}
+export class AuthModule {}

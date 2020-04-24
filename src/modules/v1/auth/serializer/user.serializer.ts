@@ -1,30 +1,28 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { deserializeUser, serializeUser } from 'passport';
 import { UserService } from '../../user/user.service';
+import { PassportSerializer } from '@nestjs/passport';
 
 @Injectable()
-export class UserSerializer {
+export class UserSerializer extends PassportSerializer {
 	constructor (
 		private readonly userService: UserService
 	) {
-		this.init();
+		super();
 	}
 
-	init() {
-		serializeUser((user, done) => {
-			done(null, user);
-		});
+	serializeUser (user: any, done) {
+		return done(null, user);
+	}
 
-		deserializeUser(async (id: string, done) => {
-			try {
-				const user = await this.userService.findOneByEmail(id);
-				if (user) {
-					return done(null, user);
-				}
-				done(new UnauthorizedException());
-			} catch (e) {
-				done(new UnauthorizedException());
+	async deserializeUser (email: string, done) {
+		try {
+			const user = await this.userService.findOneByEmail(email);
+			if (user) {
+				return done(null, user);
 			}
-		});
+			return(new UnauthorizedException());
+		} catch (e) {
+			return(new UnauthorizedException());
+		}
 	}
 }
