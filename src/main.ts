@@ -1,7 +1,6 @@
-import { SetCookieInterceptor } from './modules/v1/auth/interceptors/set-cookie.interceptor';
-
 require('dotenv').config({ path: `env/${process.env.NODE_ENV.toLowerCase()}.env` });
 
+import { SetCookieInterceptor } from './modules/v1/auth/interceptors/set-cookie.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import * as rateLimit from 'express-rate-limit';
 import { NestFactory } from '@nestjs/core';
@@ -26,7 +25,7 @@ async function bootstrap () {
   app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: true, forbidNonWhitelisted: true, whitelist: true }));
 
   const port = process.env.PORT || 3000;
-  await app.listen(port, process.env.HOST, () => console.info(`Express server is running on http://${process.env.HOST}:${process.env.PORT}/`));
+  await app.listen(port, process.env.HOST, () => console.info(`Express server is running on ${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/`));
 }
 
 bootstrap()
