@@ -1,4 +1,4 @@
-import { HttpModule, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,10 +7,10 @@ import { AuthService } from './auth.service';
 import { GoogleStrategyConfigProvider } from './providers/google-strategy-config.provider';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { UserSerializer } from './serializer/user.serializer';
-import { authenticate } from 'passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtStrategyConfigProvider } from './providers/jwt-strategy-config.provider';
-import { sign } from 'jsonwebtoken';
+import { SpotifyStrategy } from './strategies/spotify.strategy';
+import { SpotifyStrategyConfigProvider } from './providers/spotify-config.provider';
 
 @Module({
   providers: [
@@ -18,8 +18,10 @@ import { sign } from 'jsonwebtoken';
     AuthService,
     GoogleStrategyConfigProvider,
     JwtStrategyConfigProvider,
+    SpotifyStrategyConfigProvider,
     GoogleStrategy,
     JwtStrategy,
+    SpotifyStrategy,
     UserSerializer
   ],
   controllers: [AuthController],

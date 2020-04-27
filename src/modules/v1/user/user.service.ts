@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './models/user.entity';
 import { Repository } from 'typeorm';
@@ -20,5 +20,14 @@ export class UserService {
 
   saveUser (user: UserEntity) {
     return this.userRepository.save(user);
+  }
+
+  async updateSpotifyId (email: string, id: string) {
+    const user = await this.findOneByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    user.spotifyId = id;
+    return this.saveUser(user);
   }
 }
