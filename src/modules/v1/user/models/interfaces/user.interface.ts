@@ -4,5 +4,6 @@ export interface IUser {
   lastName: string;
   googleId: string;
   spotifyId: string;
+  youtubeConnected: boolean;
   premium: boolean;
 }

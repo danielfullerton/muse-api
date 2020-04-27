@@ -21,18 +21,22 @@ export class UserEntity implements IUser {
   @Column({ nullable: true })
   spotifyId: string;
 
+  @Column({ default: false })
+  youtubeConnected: boolean;
+
   @CreateDateColumn()
   dateCreated: Date;
 
   @UpdateDateColumn()
   dateUpdated: Date;
 
-  constructor (email: string, firstName: string, lastName: string, premium: boolean, googleId: string, spotifyId: string) {
+  constructor (email: string, firstName: string, lastName: string, premium: boolean, googleId: string, spotifyId: string, youtubeConnected: boolean) {
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
     this.premium = premium;
     this.googleId = googleId;
     this.spotifyId = spotifyId;
+    this.youtubeConnected = youtubeConnected;
   }
 }

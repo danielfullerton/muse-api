@@ -4,12 +4,14 @@ import { GOOGLE_STRATEGY_CONFIG } from '../providers/google-strategy-config.prov
 import { UserService } from '../../user/user.service';
 import { UserEntity } from '../../user/models/user.entity';
 import { PassportStrategy } from '@nestjs/passport';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
 	constructor (
 		@Inject(GOOGLE_STRATEGY_CONFIG) private readonly googleStrategyConfig: StrategyOptionsWithRequest,
-		private readonly userService: UserService
+		private readonly userService: UserService,
+		private readonly authService: AuthService
 	) {
 		super(googleStrategyConfig);
 	}
@@ -17,7 +19,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 	authenticate(req, options) {
 		super.authenticate(req, {
 			...options,
-			scope: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile']
+			scope: [
+				'https://www.googleapis.com/auth/userinfo.email',
+				'https://www.googleapis.com/auth/userinfo.profile'
+			],
+			state: this.authService.serializeState(req.query)
 		})
 	}
 
@@ -28,7 +34,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 			if (existingUser) {
 				return existingUser;
 			} else {
-				const user = new UserEntity(profile.emails[0].value, profile.name.givenName, profile.name.familyName, undefined, profile.id, undefined);
+				const user = new UserEntity(profile.emails[0].value, profile.name.givenName, profile.name.familyName, undefined, profile.id, undefined, undefined);
         return await this.userService.saveUser(user);
 			}
 		} catch (e) {

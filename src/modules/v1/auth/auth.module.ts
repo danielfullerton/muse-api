@@ -11,6 +11,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtStrategyConfigProvider } from './providers/jwt-strategy-config.provider';
 import { SpotifyStrategy } from './strategies/spotify.strategy';
 import { SpotifyStrategyConfigProvider } from './providers/spotify-config.provider';
+import { YoutubeStrategy } from './strategies/youtube.strategy';
 
 @Module({
   providers: [
@@ -22,6 +23,7 @@ import { SpotifyStrategyConfigProvider } from './providers/spotify-config.provid
     GoogleStrategy,
     JwtStrategy,
     SpotifyStrategy,
+    YoutubeStrategy,
     UserSerializer
   ],
   controllers: [AuthController],

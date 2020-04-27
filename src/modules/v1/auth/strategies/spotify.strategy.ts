@@ -21,10 +21,11 @@ export class SpotifyStrategy extends PassportStrategy(PassportSpotify.Strategy) 
 	}
 
 	async validate(accessToken: string, refreshToken: string, profile: any) {
-		const user = await this.userService.updateSpotifyId(profile.emails[0].value, profile.id);
+		const user = await this.userService.findOneByEmail(profile.emails[0].value);
 		if (!user) {
 			throw new UnauthorizedException();
 		}
-		return user;
+		user.spotifyId = profile.id;
+		return this.userService.saveUser(user);
 	}
 }
