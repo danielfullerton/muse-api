@@ -19,7 +19,10 @@ async function bootstrap () {
   app.use(cookieParser(process.env.SECRET));
   app.use(passport.initialize());
 
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    origin: `${process.env.CLIENT_PROTOCOL}://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}`
+  });
 
   app.useGlobalInterceptors(new SetCookieInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: true, forbidNonWhitelisted: true, whitelist: true }));

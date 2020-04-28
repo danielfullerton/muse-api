@@ -2,7 +2,6 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Strategy, StrategyOptions } from 'passport-jwt';
 import { JWT_STRATEGY_CONFIG } from '../providers/strategy/jwt-strategy-config.provider';
 import { UserService } from '../../user/user.service';
-import { UserEntity } from '../../user/models/user.entity';
 import { PassportStrategy } from '@nestjs/passport';
 import { SerializedUser } from '../serializer/user.serializer';
 
@@ -13,6 +12,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly userService: UserService
   ) {
     super(jwtStrategyConfig);
+  }
+
+  authenticate (req, options?: any): void {
+    super.authenticate(req, options);
   }
 
   // used by NestJS
