@@ -1,9 +1,10 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Strategy, StrategyOptions } from 'passport-jwt';
-import { JWT_STRATEGY_CONFIG } from '../providers/jwt-strategy-config.provider';
+import { JWT_STRATEGY_CONFIG } from '../providers/strategy/jwt-strategy-config.provider';
 import { UserService } from '../../user/user.service';
 import { UserEntity } from '../../user/models/user.entity';
 import { PassportStrategy } from '@nestjs/passport';
+import { SerializedUser } from '../serializer/user.serializer';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -15,11 +16,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   // used by NestJS
-  async validate(jwtPayload: UserEntity) {
-    const user = await this.userService.findOneByEmail(jwtPayload.email);
+  async validate(jwtPayload: SerializedUser) {
+    const user = await this.userService.findOneByEmail(jwtPayload.profile.email);
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user;
+    return { ...jwtPayload, profile: user };
   }
 }

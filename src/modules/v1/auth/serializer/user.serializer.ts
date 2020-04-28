@@ -1,6 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../user/user.service';
 import { PassportSerializer } from '@nestjs/passport';
+import { UserEntity } from '../../user/models/user.entity';
+
+// todo: dedicate file
+export interface SerializedUser {
+	profile: UserEntity;
+	googleAccessToken: string;
+	spotifyAccessToken: string;
+	spotifyRefreshToken: string;
+	youtubeAccessToken: string;
+}
 
 @Injectable()
 export class UserSerializer extends PassportSerializer {
@@ -10,15 +20,15 @@ export class UserSerializer extends PassportSerializer {
 		super();
 	}
 
-	serializeUser (user: any, done) {
-		return done(null, user);
+	serializeUser (serializedUser: SerializedUser, done) {
+		return done(null, serializedUser);
 	}
 
-	async deserializeUser (email: string, done) {
+	async deserializeUser (serializedUser: SerializedUser, done) {
 		try {
-			const user = await this.userService.findOneByEmail(email);
+			const user = await this.userService.findOneByEmail(serializedUser.profile.email);
 			if (user) {
-				return done(null, user);
+				return done(null, { ...serializedUser, profile: user });
 			}
 			return(new UnauthorizedException());
 		} catch (e) {

@@ -34,8 +34,10 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard, SpotifyAuthGuard)
   @Get('spotify/callback')
-  spotifyCallback(@Req() req, @Res() res: Response) {
-    return res.redirect(`${process.env.CLIENT_PROTOCOL}://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/settings`);
+  spotifyCallback(@Req() req, @Res() res: Response, @Query() params) {
+    const state = this.authService.deserializeState(params.state);
+    const redirectUri = this.authService.normalizeUrl(`${process.env.CLIENT_PROTOCOL}://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/${state.redirectPath}`);
+    return res.redirect(redirectUri);
   }
 
   @UseGuards(JwtAuthGuard, YoutubeAuthGuard)
@@ -44,14 +46,16 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard, YoutubeAuthGuard)
   @Get('youtube/callback')
-  youtubeCallback(@Res() res) {
-    return res.redirect(`${process.env.CLIENT_PROTOCOL}://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/settings`);
+  youtubeCallback(@Res() res, @Query() params) {
+    const state = this.authService.deserializeState(params.state);
+    const redirectUri = this.authService.normalizeUrl(`${process.env.CLIENT_PROTOCOL}://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/${state.redirectPath}`);
+    return res.redirect(redirectUri);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('user')
   getUser(@Req() req) {
-    return req.user;
+    return req.user.profile;
   }
 
   @UseGuards(JwtAuthGuard)

@@ -1,6 +1,6 @@
 import { Profile, Strategy, StrategyOptionsWithRequest } from 'passport-google-oauth20';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { GOOGLE_STRATEGY_CONFIG } from '../providers/google-strategy-config.provider';
+import { GOOGLE_STRATEGY_CONFIG } from '../providers/strategy/google-strategy-config.provider';
 import { UserService } from '../../user/user.service';
 import { UserEntity } from '../../user/models/user.entity';
 import { PassportStrategy } from '@nestjs/passport';
@@ -44,7 +44,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 					undefined,
 					profile.photos[0].value
 				);
-        return await this.userService.saveUser(user);
+        await this.userService.saveUser(user);
+        return { profile: user, googleAccessToken: accessToken };
 			}
 		} catch (e) {
 			throw new UnauthorizedException();

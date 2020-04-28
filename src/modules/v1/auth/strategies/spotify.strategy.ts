@@ -1,14 +1,17 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { SPOTIFY_STRATEGY_CONFIG } from '../providers/spotify-config.provider';
+import { SPOTIFY_STRATEGY_CONFIG } from '../providers/strategy/spotify-config.provider';
 import { UserService } from '../../user/user.service';
 import PassportSpotify = require('passport-spotify');
+import { serialize } from 'v8';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class SpotifyStrategy extends PassportStrategy(PassportSpotify.Strategy) {
 	constructor (
 		@Inject(SPOTIFY_STRATEGY_CONFIG) private readonly spotifyStrategyConfig,
-		private readonly userService: UserService
+		private readonly userService: UserService,
+		private readonly authService: AuthService
 	) {
 		super(spotifyStrategyConfig);
 	}
@@ -16,7 +19,12 @@ export class SpotifyStrategy extends PassportStrategy(PassportSpotify.Strategy) 
 	authenticate(req, options) {
 		super.authenticate(req, {
 			...options,
-			scope: ['user-read-email']
+			scope: [
+				'user-read-email',
+				'playlist-read-private',
+				'playlist-read-collaborative'
+			],
+			state: this.authService.serializeState(req.query)
 		});
 	}
 
@@ -26,6 +34,7 @@ export class SpotifyStrategy extends PassportStrategy(PassportSpotify.Strategy) 
 			throw new UnauthorizedException();
 		}
 		user.spotifyId = profile.id;
-		return this.userService.saveUser(user);
+		await this.userService.saveUser(user);
+		return { profile: user, spotifyAccessToken: accessToken, spotifyRefreshToken: refreshToken };
 	}
 }
