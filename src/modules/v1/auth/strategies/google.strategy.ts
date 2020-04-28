@@ -34,7 +34,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 			if (existingUser) {
 				return existingUser;
 			} else {
-				const user = new UserEntity(profile.emails[0].value, profile.name.givenName, profile.name.familyName, undefined, profile.id, undefined, undefined);
+				const user = new UserEntity(
+					profile.emails[0].value,
+					profile.name.givenName,
+					profile.name.familyName,
+					undefined,
+					profile.id,
+					undefined,
+					undefined,
+					profile.photos[0].value
+				);
         return await this.userService.saveUser(user);
 			}
 		} catch (e) {

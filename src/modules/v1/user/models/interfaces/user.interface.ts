@@ -6,4 +6,5 @@ export interface IUser {
   spotifyId: string;
   youtubeConnected: boolean;
   premium: boolean;
+  photoUrl: string;
 }

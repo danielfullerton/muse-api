@@ -24,13 +24,16 @@ export class UserEntity implements IUser {
   @Column({ default: false })
   youtubeConnected: boolean;
 
+  @Column({ nullable: true })
+  photoUrl: string;
+
   @CreateDateColumn()
   dateCreated: Date;
 
   @UpdateDateColumn()
   dateUpdated: Date;
 
-  constructor (email: string, firstName: string, lastName: string, premium: boolean, googleId: string, spotifyId: string, youtubeConnected: boolean) {
+  constructor (email: string, firstName: string, lastName: string, premium: boolean, googleId: string, spotifyId: string, youtubeConnected: boolean, photoUrl: string) {
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -38,5 +41,6 @@ export class UserEntity implements IUser {
     this.googleId = googleId;
     this.spotifyId = spotifyId;
     this.youtubeConnected = youtubeConnected;
+    this.photoUrl = photoUrl;
   }
 }
