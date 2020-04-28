@@ -3,7 +3,7 @@ import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/models/user.entity';
 import { Request, Response } from 'express';
 import { SerializedUser } from './serializer/user.serializer';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 
 // todo: dedicate file
 export interface StateObject {
@@ -34,13 +34,14 @@ export class AuthService {
   }
 
   static setCookie(req: Request, res: Response) {
-    const { profile, youtubeAccessToken, spotifyRefreshToken, googleAccessToken, spotifyAccessToken} = req.user as SerializedUser;
+    const existingToken = (req.cookies['x-muse-token'] ? (verify(req.cookies['x-muse-token'], process.env.SECRET)) : {}) as SerializedUser;
+    const user: SerializedUser = (req.user as SerializedUser);
     const payload: SerializedUser = {
-      profile,
-      googleAccessToken,
-      spotifyAccessToken,
-      spotifyRefreshToken,
-      youtubeAccessToken
+      profile: user.profile,
+      googleAccessToken: user.googleAccessToken || existingToken.googleAccessToken,
+      spotifyAccessToken: user.spotifyAccessToken || existingToken.spotifyAccessToken,
+      spotifyRefreshToken: user.spotifyRefreshToken || existingToken.spotifyRefreshToken,
+      youtubeAccessToken: user.youtubeAccessToken || existingToken.youtubeAccessToken
     };
     const token = sign(payload, process.env.SECRET, {
       issuer: process.env.HOST,

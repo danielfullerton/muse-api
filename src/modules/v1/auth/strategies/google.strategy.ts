@@ -32,7 +32,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 		try {
 			const existingUser = await this.userService.findOneByGoogleId(profile.id);
 			if (existingUser) {
-				return existingUser;
+				return { profile: existingUser, googleAccessToken: accessToken };
 			} else {
 				const user = new UserEntity(
 					profile.emails[0].value,
