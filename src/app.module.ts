@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/v1/auth/auth.module';
 import { V1Module } from './modules/v1/v1.module';
 import { RouterModule, Routes } from 'nest-router';
+import { SpotifyModule } from './modules/v1/spotify/spotify.module';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
       {
         path: '/auth',
         module: AuthModule
+      },
+      {
+        path: '/spotify',
+        module: SpotifyModule
       }
     ]
   }

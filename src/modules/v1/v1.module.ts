@@ -3,6 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { UserEntity } from './user/models/user.entity';
+import { SpotifyModule } from './spotify/spotify.module';
 
 @Module({
   imports: [
@@ -20,7 +21,10 @@ import { UserEntity } from './user/models/user.entity';
     PassportModule.register({
       session: false
     }),
-    AuthModule
-  ]
+    AuthModule,
+    SpotifyModule
+  ],
+  providers: [],
+  controllers: []
 })
 export class V1Module {}

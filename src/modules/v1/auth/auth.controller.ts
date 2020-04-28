@@ -57,6 +57,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('logout')
   logout(@Res() res) {
+    // todo: make cookie httponly, secure, etc.
     res.cookie('x-muse-token', '', {});
     return;
   }
