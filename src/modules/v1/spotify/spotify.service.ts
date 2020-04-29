@@ -6,6 +6,8 @@ import { Request, Response } from 'express';
 import { SerializedUser } from '../auth/serializer/user.serializer';
 import { AuthService } from '../auth/auth.service';
 import ListOfCurrentUsersPlaylistsResponse = SpotifyApi.ListOfCurrentUsersPlaylistsResponse;
+import SinglePlaylistResponse = SpotifyApi.SinglePlaylistResponse;
+import MultipleTracksResponse = SpotifyApi.MultipleTracksResponse;
 
 @Injectable()
 export class SpotifyService {
@@ -44,6 +46,35 @@ export class SpotifyService {
 		const response: ListOfCurrentUsersPlaylistsResponse = await request({
 			method: 'GET',
 			url: 'https://api.spotify.com/v1/me/playlists',
+			headers: {
+				Authorization: 'Bearer ' + accessToken
+			},
+			json: true
+		});
+
+		return response;
+	}
+
+	async getPlaylist(accessToken: string, playlistId: string) {
+		const response: SinglePlaylistResponse = await request({
+			method: 'GET',
+			url: 'https://api.spotify.com/v1/playlists/' + playlistId,
+			headers: {
+				Authorization: 'Bearer ' + accessToken
+			},
+			json: true
+		});
+
+		return response;
+	}
+
+	async getSongs(accessToken: string, playlistId: string) {
+		const playlist = await this.getPlaylist(accessToken, playlistId);
+		const apiRef = playlist.tracks.href;
+
+		const response: MultipleTracksResponse = await request({
+			method: 'GET',
+			url: apiRef,
 			headers: {
 				Authorization: 'Bearer ' + accessToken
 			},
