@@ -24,7 +24,15 @@ export class SpotifyController {
 	@Get('playlists/:id/songs')
 	async getSongs(@Req() req, @Res() res, @Param('id') id) {
 		await this.spotifyService.refreshAccessToken(req, res);
-		const response = await this.spotifyService.getSongs((req.user as SerializedUser).spotifyAccessToken, id);
+		const response = await this.spotifyService.getSongs(req.user, id);
+		return res.status(200).send(response);
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Get('playlists/:id')
+	async getPlaylist(@Req() req, @Res() res, @Param('id') id) {
+		await this.spotifyService.refreshAccessToken(req, res);
+		const response = await this.spotifyService.getPlaylist((req.user as SerializedUser).spotifyAccessToken, id);
 		return res.status(200).send(response);
 	}
 }

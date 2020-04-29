@@ -68,15 +68,18 @@ export class SpotifyService {
 		return response;
 	}
 
-	async getSongs(accessToken: string, playlistId: string) {
-		const playlist = await this.getPlaylist(accessToken, playlistId);
-		const apiRef = playlist.tracks.href;
+	async getSongs(serializedUser: SerializedUser, playlistId: string) {
+		const playlist = await this.getPlaylist(serializedUser.spotifyAccessToken, playlistId);
+		if (playlist.owner.id !== serializedUser.profile.spotifyId) {
+			throw new UnauthorizedException();
+		}
 
+		const apiRef = playlist.tracks.href;
 		const response: MultipleTracksResponse = await request({
 			method: 'GET',
 			url: apiRef,
 			headers: {
-				Authorization: 'Bearer ' + accessToken
+				Authorization: 'Bearer ' + serializedUser.spotifyAccessToken
 			},
 			json: true
 		});
