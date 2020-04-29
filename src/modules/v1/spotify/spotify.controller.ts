@@ -36,3 +36,4 @@ export class SpotifyController {
 		return res.status(200).send(response);
 	}
 }
+

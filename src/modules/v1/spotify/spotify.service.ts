@@ -45,7 +45,7 @@ export class SpotifyService {
 	async getPlaylists(accessToken: string) {
 		const response: ListOfCurrentUsersPlaylistsResponse = await request({
 			method: 'GET',
-			url: 'https://api.spotify.com/v1/me/playlists',
+			url: `${this.spotifyConfig.apiUrl}/v1/me/playlists`,
 			headers: {
 				Authorization: 'Bearer ' + accessToken
 			},
@@ -58,7 +58,7 @@ export class SpotifyService {
 	async getPlaylist(accessToken: string, playlistId: string) {
 		const response: SinglePlaylistResponse = await request({
 			method: 'GET',
-			url: 'https://api.spotify.com/v1/playlists/' + playlistId,
+			url: `${this.spotifyConfig.apiUrl}/v1/playlists/` + playlistId,
 			headers: {
 				Authorization: 'Bearer ' + accessToken
 			},

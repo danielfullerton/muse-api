@@ -3,6 +3,7 @@ import { AuthModule } from './modules/v1/auth/auth.module';
 import { V1Module } from './modules/v1/v1.module';
 import { RouterModule, Routes } from 'nest-router';
 import { SpotifyModule } from './modules/v1/spotify/spotify.module';
+import { YoutubeModule } from './modules/v1/youtube/youtube.module';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
       {
         path: '/spotify',
         module: SpotifyModule
+      },
+      {
+        path: '/youtube',
+        module: YoutubeModule
       }
     ]
   }

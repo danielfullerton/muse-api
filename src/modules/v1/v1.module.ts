@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { UserEntity } from './user/models/user.entity';
 import { SpotifyModule } from './spotify/spotify.module';
+import { YoutubeModule } from './youtube/youtube.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { SpotifyModule } from './spotify/spotify.module';
       session: false
     }),
     AuthModule,
-    SpotifyModule
+    SpotifyModule,
+    YoutubeModule
   ],
   providers: [],
   controllers: []
