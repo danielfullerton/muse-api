@@ -70,7 +70,7 @@ export class SpotifyService {
 
 	async getSongs(serializedUser: SerializedUser, playlistId: string) {
 		const playlist = await this.getPlaylist(serializedUser.spotifyAccessToken, playlistId);
-		if (playlist.owner.id !== serializedUser.profile.spotifyId) {
+		if (playlist.owner.id !== serializedUser.profile.spotifyId && playlist.followers.total < 2) {
 			throw new UnauthorizedException();
 		}
 
